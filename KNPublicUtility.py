@@ -48,7 +48,7 @@ class KNPublicUtility:
         self.LI = 0
 
 
-    def Load_Json_File(self,data_in=None):
+    def __Load_Json_File(self,data_in=None):
         SPath = os.path.dirname(os.path.realpath(__file__))
         
         creds_json_path = os.path.join(SPath, 'KNPUCreds.json')
@@ -242,7 +242,7 @@ class KNPublicUtility:
         response = None
         options = self.__Assign_Options(**kwargs)
 
-        RotatingProxies = self.Load_Json_File('IPs')
+        RotatingProxies = self.__Load_Json_File('IPs')
         RotatingProxies = [f"http://{proxies['username']}:{proxies['password']}@{proxies['IP']}:{proxies['port']}" for proxies in RotatingProxies]
         
         while response is None:
