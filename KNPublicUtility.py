@@ -17,21 +17,20 @@ The Methods can be Accessed From the ETL Tool are:
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 """
 
+import functools
+import inspect
 import json
 import os
 import random
 import sys
 import time
 import warnings
-import functools
-import inspect
 from copy import deepcopy
 
-import requests
-import pandas as pd
 import numpy as np
+import pandas as pd
+import requests
 from bs4 import BeautifulSoup
-from requests.auth import HTTPDigestAuth
 
 print = functools.partial(print, flush=True)
 warnings.simplefilter("ignore")
@@ -47,10 +46,9 @@ class KNPublicUtility:
         self.pi = 0
         self.LI = 0
 
-
-    def __Load_Json_File(self,data_in=None):
+    def __Load_Json_File(self, data_in=None):
         SPath = os.path.dirname(os.path.realpath(__file__))
-        
+
         creds_json_path = os.path.join(SPath, 'KNPUCreds.json')
         if not os.path.exists(creds_json_path):
             print('>> "Credential Json File" NOT Found, Please check')
@@ -58,7 +56,7 @@ class KNPublicUtility:
 
         with open(creds_json_path) as File:
             creds_data = json.load(File)
-            
+
         if data_in == 'api_init':
             self.__Initialize_URL(creds_data['proxy_api_url'])
         elif data_in == 'IPs':
@@ -66,16 +64,14 @@ class KNPublicUtility:
 
         return None
 
-
     def __Initialize_URL(self, api_urls):
-    
+
         self.geoNodeUrl = api_urls.get('geoNodeUrl')
         self.advancedProxies = api_urls.get('advancedProxies')
         self.freeProxyWorld = api_urls.get('freeProxyWorld')
         self.freeProxyList = api_urls.get('freeProxyList')
 
         return True
-
 
     def __Assign_Options(self, **kwargs):
         options = {
@@ -86,13 +82,12 @@ class KNPublicUtility:
         options.update(kwargs)
 
         return options
-        
-        
+
     def __LoadProxyServer(self, pServer, region, ptype):
-    
+
         region = region.upper()
         ptype = ptype.lower()
-        
+
         def geoNodeProxy():
             proxyList = list()
             mText = "GeoNodeProxy"
@@ -100,14 +95,14 @@ class KNPublicUtility:
             try:
                 if not ptype: ptype = 'http,https'
                 payload = {
-                    "limit" : 500,
-                    "page" : 1,
-                    "sort_by" : "lastChecked",
-                    "sort_type" : "desc",
-                    "country" : region,
-                    "protocols" : ptype
+                    "limit": 500,
+                    "page": 1,
+                    "sort_by": "lastChecked",
+                    "sort_type": "desc",
+                    "country": region,
+                    "protocols": ptype
                 }
-                resp = requests.get(self.geoNodeUrl, params = payload)
+                resp = requests.get(self.geoNodeUrl, params=payload)
                 res_string = resp.json()
                 df = pd.DataFrame(pd.json_normalize(res_string['data']))
                 df['PROXY'] = df['ip'] + ':' + df['port']
@@ -115,18 +110,18 @@ class KNPublicUtility:
             except Exception as E:
                 pass
 
-            return mText,proxyList
+            return mText, proxyList
 
         def freeProxyWorld():
             proxyList = list()
             mText = "FreeProxyWorld"
             try:
                 payload = {
-                    "country" : region,
-                    "type" : ptype,
-                    "page" : 1
+                    "country": region,
+                    "type": ptype,
+                    "page": 1
                 }
-                resp = requests.get(self.freeProxyWorld, params = payload)
+                resp = requests.get(self.freeProxyWorld, params=payload)
                 Soup = BeautifulSoup(resp.text, 'html.parser')
                 data = Soup.find('table', {'class': 'layui-table'})
                 df = pd.DataFrame(pd.read_html(str(data))[0])
@@ -136,7 +131,7 @@ class KNPublicUtility:
             except Exception as E:
                 pass
 
-            return mText,proxyList
+            return mText, proxyList
 
         def freeProxyList():
             proxyList = list()
@@ -156,28 +151,28 @@ class KNPublicUtility:
             except Exception as E:
                 pass
 
-            return mText,proxyList
-            
+            return mText, proxyList
+
         def advancedProxies():
             proxyList = list()
             mText = "AdvancedProxyList"
             try:
                 resp = requests.get(self.advancedProxies)
-                PList = pd.json_normalize(resp.json(), 'protocols',  ['ip', 'port', ['location', 'isocode']],record_prefix='_')
+                PList = pd.json_normalize(resp.json(), 'protocols', ['ip', 'port', ['location', 'isocode']],
+                                          record_prefix='_')
                 if region:
                     PList = PList[PList['location.isocode'].isin([region])]
                 cptype = 'https'
                 if ptype: cptype = ptype
                 PList = PList[PList['_type'].isin([cptype])]
-                PList['proxy'] = PList['ip'].astype(str)+':'+PList['port'].astype(str)
+                PList['proxy'] = PList['ip'].astype(str) + ':' + PList['port'].astype(str)
                 proxyList = PList['proxy'].tolist()
             except Exception as E:
                 pass
-            
-            return mText,proxyList
-            
-        return eval(pServer)()
 
+            return mText, proxyList
+
+        return eval(pServer)()
 
     def ProxyCall(self, url, region='', ptype='', **kwargs):
 
@@ -190,7 +185,7 @@ class KNPublicUtility:
 
         if region == '' and ptype == '' and not self.proxiesList:
             response = self.ProxyRotate(url, **kwargs)
-        
+
         if response is None and not self.proxiesList:
             print(f'\n<> {self.class_name}.{inspect.currentframe().f_code.co_name}')
             print(">> Searching for Free Proxy IP's to Connect Source...")
@@ -198,9 +193,11 @@ class KNPublicUtility:
         while response is None:
             if self.proxiesList:
                 try:
-                    proxies = {"http": "http://" + self.proxiesList[self.pi], "https": "http://" + self.proxiesList[self.pi]}
+                    proxies = {"http": "http://" + self.proxiesList[self.pi],
+                               "https": "http://" + self.proxiesList[self.pi]}
                     response = requests.get(url, proxies=proxies, **options)
-                    if response.ok : print(">> Successfully Fetched Data using the IP : '{}'".format(self.proxiesList[self.pi]))
+                    if response.ok: print(
+                        ">> Successfully Fetched Data using the IP : '{}'".format(self.proxiesList[self.pi]))
                     if response.status_code != 200:
                         response = None
                         continue
@@ -209,9 +206,10 @@ class KNPublicUtility:
                     time.sleep(2)
                     count_failed_ip += 1
                     del self.proxiesList[self.pi]
-                    if (count_failed_ip%10 == 0):
-                        print(f'>> With {count_failed_ip} more IPs Failed to Extract Data | Checking with Other {len(self.proxiesList)} IPs')
-                    #print(">> Failed Proxy IP : ",self.proxiesList[self.pi])
+                    if count_failed_ip % 10 == 0:
+                        print(
+                            f'>> With {count_failed_ip} more IPs Failed to Extract Data | Checking with Other {len(self.proxiesList)} IPs')
+                    # print(">> Failed Proxy IP : ",self.proxiesList[self.pi])
                     if self.proxiesList:
                         self.pi = random.randint(0, len(self.proxiesList) - 1)
                     response = None
@@ -223,16 +221,15 @@ class KNPublicUtility:
                 else:
                     mText, self.proxiesList = self.__LoadProxyServer(proxy_servers[self.LI], region, ptype)
                     self.LI += 1
-                    print("\n>> Loaded {} Proxy IPs from {}".format(len(self.proxiesList),mText))
+                    print("\n>> Loaded {} Proxy IPs from {}".format(len(self.proxiesList), mText))
                     if self.LI == len(proxy_servers):
                         total_iteration += 1
                         self.LI = 0
 
         return response
 
-
     def ProxyRotate(self, url, **kwargs):
-    
+
         if self.ps:
             print(f'\n<> {self.class_name}.{inspect.currentframe().f_code.co_name}')
             print(">> Trying to Connect Source using WebShare Rotating Proxies..!!")
@@ -243,8 +240,9 @@ class KNPublicUtility:
         options = self.__Assign_Options(**kwargs)
 
         RotatingProxies = self.__Load_Json_File('IPs')
-        RotatingProxies = [f"http://{proxies['username']}:{proxies['password']}@{proxies['IP']}:{proxies['port']}" for proxies in RotatingProxies]
-        
+        RotatingProxies = [f"http://{proxies['username']}:{proxies['password']}@{proxies['IP']}:{proxies['port']}" for
+                           proxies in RotatingProxies]
+
         while response is None:
             if count == 2:
                 print(">> No WebShare Rotating Proxies are Valid..!!")
@@ -262,50 +260,48 @@ class KNPublicUtility:
                         response = None
                         response.raise_for_status()
                 except:
-                    #print(">> Refreshing Proxy IPs")
+                    # print(">> Refreshing Proxy IPs")
                     time.sleep(5)
                     pass
             count += 1
-        
+
         return response
 
-
-    def GetProxyIP(self,IP_Count=None, region='', ptype=''):
+    def GetProxyIP(self, IP_Count=None, region='', ptype=''):
         if self.ps:
             print(f'\n<> {self.class_name}.{inspect.currentframe().f_code.co_name}')
             self.ps = False
-        
+
         proxiesList = []
         pServerMap = {
-            "S1":"geoNodeProxy",
-            "S2":"freeProxyWorld",
-            "S3":"freeProxyList",
-            "S4":"advancedProxies"
+            "S1": "geoNodeProxy",
+            "S2": "freeProxyWorld",
+            "S3": "freeProxyList",
+            "S4": "advancedProxies"
         }
-        
-        for ps in ['S1','S2','S3','S4']:
+
+        for ps in ['S1', 'S2', 'S3', 'S4']:
             _, proxiesList1 = self.__LoadProxyServer(pServerMap.get(ps), region, ptype)
             proxiesList += proxiesList1
-            #print(f"{ps} = {len(proxiesList1)}")              
-        
+            # print(f"{ps} = {len(proxiesList1)}")
+
         if isinstance(IP_Count, str):
             IP_Count = int(IP_Count)
-        
+
         if not IP_Count:
             IP_Count = len(proxiesList)
-        
+
         proxiesList = proxiesList[:IP_Count]
         print(f">> Total Proxy IPs Returned : {len(proxiesList)}")
 
         return proxiesList
-
 
     def JsonToDataFrame(self, JData):
         if self.ps:
             print(f'\n<> {self.class_name}.{inspect.currentframe().f_code.co_name}')
             print(f'>> Processing the Json Data to Export as DataFrame')
             self.ps = False
-        
+
         def cross_join(left, right):
             new_rows = [] if right else left
             for left_row in left:
@@ -338,8 +334,7 @@ class KNPublicUtility:
                 return rows
 
             return pd.DataFrame(flatten_json(data_in))
-     
-        
+
         if isinstance(JData, str):
             response = requests.get(JData)
             if response.status_code == 200:
@@ -349,11 +344,10 @@ class KNPublicUtility:
                 sys.exit()
         else:
             json_data = JData
-            
+
         DataFrame = json_to_dataframe(json_data)
 
         return DataFrame
-
 
     def GetIndex(self, Data, Pattern):
 
@@ -370,5 +364,3 @@ class KNPublicUtility:
 
 if __name__ == '__main__':
     KNPU = KNPublicUtility()
-
-
