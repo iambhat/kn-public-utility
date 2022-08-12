@@ -40,7 +40,7 @@ warnings.simplefilter("ignore")
 class KNPublicUtility:
     def __init__(self):
         self.class_name = type(self).__name__
-        self.Load_Json_File('api_init')
+        self.__Load_Json_File('api_init')
 
         self.proxiesList = []
         self.ps = True
@@ -60,14 +60,14 @@ class KNPublicUtility:
             creds_data = json.load(File)
             
         if data_in == 'api_init':
-            self.Initialize_URL(creds_data['proxy_api_url'])
+            self.__Initialize_URL(creds_data['proxy_api_url'])
         elif data_in == 'IPs':
             return creds_data['rotating_proxies']
 
         return None
 
 
-    def Initialize_URL(self, api_urls):
+    def __Initialize_URL(self, api_urls):
     
         self.geoNodeUrl = api_urls.get('geoNodeUrl')
         self.advancedProxies = api_urls.get('advancedProxies')
@@ -77,7 +77,7 @@ class KNPublicUtility:
         return True
 
 
-    def Assign_Options(self, **kwargs):
+    def __Assign_Options(self, **kwargs):
         options = {
             'headers': None,
             'verify': True,
@@ -88,7 +88,7 @@ class KNPublicUtility:
         return options
         
         
-    def LoadProxyServer(self, pServer, region, ptype):
+    def __LoadProxyServer(self, pServer, region, ptype):
     
         region = region.upper()
         ptype = ptype.lower()
@@ -181,7 +181,7 @@ class KNPublicUtility:
 
     def ProxyCall(self, url, region='', ptype='', **kwargs):
 
-        options = self.Assign_Options(**kwargs)
+        options = self.__Assign_Options(**kwargs)
 
         response = None
         total_iteration = 0
@@ -221,7 +221,7 @@ class KNPublicUtility:
                     print('\n>> Failed: No Valid IPs Available... Please Re-run After Sometime..')
                     sys.exit()
                 else:
-                    mText, self.proxiesList = self.LoadProxyServer(proxy_servers[self.LI], region, ptype)
+                    mText, self.proxiesList = self.__LoadProxyServer(proxy_servers[self.LI], region, ptype)
                     self.LI += 1
                     print("\n>> Loaded {} Proxy IPs from {}".format(len(self.proxiesList),mText))
                     if self.LI == len(proxy_servers):
@@ -240,7 +240,7 @@ class KNPublicUtility:
 
         count = 0
         response = None
-        options = self.Assign_Options(**kwargs)
+        options = self.__Assign_Options(**kwargs)
 
         RotatingProxies = self.Load_Json_File('IPs')
         RotatingProxies = [f"http://{proxies['username']}:{proxies['password']}@{proxies['IP']}:{proxies['port']}" for proxies in RotatingProxies]
@@ -284,7 +284,7 @@ class KNPublicUtility:
         }
         
         for ps in ['S1','S2','S3','S4']:
-            _, proxiesList1 = self.LoadProxyServer(pServerMap.get(ps), region, ptype)
+            _, proxiesList1 = self.__LoadProxyServer(pServerMap.get(ps), region, ptype)
             proxiesList += proxiesList1
             #print(f"{ps} = {len(proxiesList1)}")              
         
