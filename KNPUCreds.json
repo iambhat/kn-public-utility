@@ -1,0 +1,76 @@
+{
+	"proxy_api_url" : {
+		"geoNodeUrl" : "https://proxylist.geonode.com/api/proxy-list",
+		"advancedProxies" : "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/json/proxies-advanced.json",
+		"freeProxyWorld" : "https://www.freeproxy.world/",
+		"freeProxyList" : "https://free-proxy-list.net/"
+	},
+	"rotating_proxies" : [
+		{
+			"IP" : "p.webshare.io",
+			"port" : "80",
+			"username" : "srphkuxy-rotate",
+			"password" : "4wbu9k296y1o"
+		},
+		{
+			"IP" : "p.webshare.io",
+			"port" : "80",
+			"username" : "hhgaaakk-1",
+			"password" : "jc40kibety8v"
+		},
+		{
+			"IP" : "p.webshare.io",
+			"port" : "80",
+			"username" : "hhgaaakk-2",
+			"password" : "jc40kibety8v"
+		},
+		{
+			"IP" : "p.webshare.io",
+			"port" : "80",
+			"username" : "hhgaaakk-3",
+			"password" : "jc40kibety8v"
+		},
+		{
+			"IP" : "p.webshare.io",
+			"port" : "80",
+			"username" : "hhgaaakk-4",
+			"password" : "jc40kibety8v"
+		},
+		{
+			"IP" : "p.webshare.io",
+			"port" : "80",
+			"username" : "hhgaaakk-5",
+			"password" : "jc40kibety8v"
+		},
+		{
+			"IP" : "p.webshare.io",
+			"port" : "80",
+			"username" : "hhgaaakk-6",
+			"password" : "jc40kibety8v"
+		},
+		{
+			"IP" : "p.webshare.io",
+			"port" : "80",
+			"username" : "hhgaaakk-7",
+			"password" : "jc40kibety8v"
+		},
+		{
+			"IP" : "p.webshare.io",
+			"port" : "80",
+			"username" : "hhgaaakk-8",
+			"password" : "jc40kibety8v"
+		},
+		{
+			"IP" : "p.webshare.io",
+			"port" : "80",
+			"username" : "hhgaaakk-9",
+			"password" : "jc40kibety8v"
+		},
+		{
+			"IP" : "p.webshare.io",
+			"port" : "80",
+			"username" : "hhgaaakk-10",
+			"password" : "jc40kibety8v"
+		}
+	]
+}
