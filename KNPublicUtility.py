@@ -5,7 +5,7 @@ Which has written to handle generic task across all the python script by calling
 Developer : #0097 : Shreehari
 Version : v1.5.1
 Released on : 13-08-2022
-Detailed Docs : https://docs.google.com/document/d/1H2P7CPcfuGk3VzF6DyJg7K0Rj8TfxhpWAwyb9fPp_7I
+Detailed Docs :
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 The Methods can be Accessed From the ETL Tool are:
 1. ProxyRotate() --> Uses the WebShare Rotating proxy
