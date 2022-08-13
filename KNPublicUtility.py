@@ -207,8 +207,7 @@ class KNPublicUtility:
                     count_failed_ip += 1
                     del self.proxiesList[self.pi]
                     if count_failed_ip % 10 == 0:
-                        print(
-                            f'>> With {count_failed_ip} more IPs Failed to Extract Data | Checking with Other {len(self.proxiesList)} IPs')
+                        print(f'>> With {count_failed_ip} more IPs Failed to Extract Data | Checking with Other {len(self.proxiesList)} IPs')
                     # print(">> Failed Proxy IP : ",self.proxiesList[self.pi])
                     if self.proxiesList:
                         self.pi = random.randint(0, len(self.proxiesList) - 1)
@@ -259,7 +258,7 @@ class KNPublicUtility:
                     else:
                         response = None
                         response.raise_for_status()
-                except:
+                except Exception as E:
                     # print(">> Refreshing Proxy IPs")
                     time.sleep(5)
                     pass
