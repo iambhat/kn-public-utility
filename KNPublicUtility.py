@@ -196,8 +196,8 @@ class KNPublicUtility:
                     proxies = {"http": "http://" + self.proxiesList[self.pi],
                                "https": "http://" + self.proxiesList[self.pi]}
                     response = requests.get(url, proxies=proxies, **options)
-                    if response.ok: print(
-                        ">> Successfully Fetched Data using the IP : '{}'".format(self.proxiesList[self.pi]))
+                    if response.status_code == 200 or response.status_code == 404:
+                        print(">> Successfully Fetched Data using the IP : '{}'".format(self.proxiesList[self.pi]))
                     if response.status_code != 200:
                         response = None
                         continue
@@ -252,7 +252,7 @@ class KNPublicUtility:
                 proxies_ = {"http": proxy}
                 try:
                     response = requests.get(url=url, proxies=proxies_, **options)
-                    if response.status_code == 200:
+                    if response.status_code == 200 or response.status_code == 404:
                         print(">> Proxy Applied Successfully..!")
                         response = response
                         break
