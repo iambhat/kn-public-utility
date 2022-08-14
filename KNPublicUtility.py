@@ -3,8 +3,8 @@ KNPublicUtility : Knoema Public Dataset Automation Utility Class
 
 Which has written to handle generic task across all the python script by calling methods this class provides.
 Developer : #0097 : Shreehari
-Version : v1.5.1
-Released on : 13-08-2022
+Version : v1.5.2
+Released on : 14-08-2022
 Detailed Docs :
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 The Methods can be Accessed From the ETL Tool are:
