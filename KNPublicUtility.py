@@ -1,5 +1,5 @@
 """
-KNPublicUtility : Knoema Public Dataset Automation Utility Class
+KNPublicUtility :  Public Dataset Automation Utility Class
 
 Which has written to handle generic task across all the python script by calling methods this class provides.
 Developer : #0097 : Shreehari
